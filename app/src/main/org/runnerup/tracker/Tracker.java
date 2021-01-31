@@ -474,7 +474,6 @@ public class Tracker extends android.app.Service implements
     private void internalOnLocationChanged(Location arg0) {
         // insert location, set internal time
         if (arg0 != null) {
-            gpsFile.update(String.format("%d,%.6f,%.6f\n", System.currentTimeMillis(), arg0.getLatitude(), arg0.getLongitude()));
             onLocationChangedImpl(arg0, true);
         }
     }
@@ -641,6 +640,7 @@ public class Tracker extends android.app.Service implements
     @Override
     public void onLocationChanged(Location arg0) {
         //Elevation depends on GPS updates
+        gpsFile.update(String.format("%d,%.6f,%.6f\n", System.currentTimeMillis(), arg0.getLatitude(), arg0.getLongitude()));
         trackerElevation.onLocationChanged(arg0);
         onLocationChangedImpl(arg0, false);
     }
