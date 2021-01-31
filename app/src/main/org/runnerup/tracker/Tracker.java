@@ -39,6 +39,7 @@ import org.runnerup.BuildConfig;
 import org.runnerup.R;
 import org.runnerup.common.tracker.TrackerState;
 import org.runnerup.common.util.Constants;
+import org.runnerup.common.util.FileLogger;
 import org.runnerup.common.util.ValueModel;
 import org.runnerup.db.DBHelper;
 import org.runnerup.export.SyncManager;
@@ -132,6 +133,8 @@ public class Tracker extends android.app.Service implements
     private NotificationStateManager notificationStateManager;
     private NotificationState activityOngoingState;
 
+    private FileLogger gpsFile;
+
     @Override
     public void onCreate() {
         mDB = DBHelper.getWritableDatabase(this);
@@ -148,6 +151,8 @@ public class Tracker extends android.app.Service implements
             // >= 4.1
             trackerPebble = (TrackerPebble) components.addComponent(new TrackerPebble(this));
         }
+
+        gpsFile = new FileLogger(this, "gps", 1024);
     }
 
     @Override
@@ -165,6 +170,8 @@ public class Tracker extends android.app.Service implements
         }
 
         reset();
+
+        gpsFile.flush();
     }
 
     public void setup() {
@@ -467,6 +474,7 @@ public class Tracker extends android.app.Service implements
     private void internalOnLocationChanged(Location arg0) {
         // insert location, set internal time
         if (arg0 != null) {
+            gpsFile.update(String.format("%d,%.6f,%.6f\n", System.currentTimeMillis(), arg0.getLatitude(), arg0.getLongitude()));
             onLocationChangedImpl(arg0, true);
         }
     }
