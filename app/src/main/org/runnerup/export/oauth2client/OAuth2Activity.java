@@ -106,6 +106,10 @@ public class OAuth2Activity extends AppCompatActivity {
         } catch (Exception e) {
             wvt = new WebView(getApplicationContext());
         }
+
+        String USER_AGENT_FAKE = "Mozilla/5.0 (Linux; Android 4.1.1; Galaxy Nexus Build/JRO03C) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Mobile Safari/535.19";
+        wvt.getSettings().setUserAgentString(USER_AGENT_FAKE);
+
         final WebView wv = wvt;
         wv.setVerticalScrollBarEnabled(false);
         wv.setHorizontalScrollBarEnabled(false);
